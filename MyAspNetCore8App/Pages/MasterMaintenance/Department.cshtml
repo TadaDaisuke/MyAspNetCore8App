@@ -1,0 +1,34 @@
+﻿@page
+@model MasterMaintenance.DepartmentModel
+@{
+    ViewData["Title"] = "部署マスター";
+    ViewData["BreadCrumbs"] = new List<BreadCrumbItem>
+    {
+        new("/Index", "Home"),
+    };
+    ViewData["ListColumns"] = new List<ListColumn>
+    {
+        new("Seq."),
+        new("部署コード", "department_code"),
+        new("部署名", "department_name"),
+    };
+    ViewData["ModalTitle"] = "部署詳細";
+}
+<form id="searchConditionForm" asp-antiforgery="true">
+    <div class="row">
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.DepartmentNamePart" class="form-label"></label>
+            <input asp-for="SearchCondition.DepartmentNamePart" type="text" class="form-control" />
+        </div>
+    </div>
+    <input asp-for="SearchCondition.OffsetRows" type="hidden" value="0" />
+    <input asp-for="SearchCondition.SortItem" type="hidden" />
+    <input asp-for="SearchCondition.SortType" type="hidden" />
+</form>
+
+<partial name="_SearchListPartial" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_SearchListScriptsPartial" />
+}

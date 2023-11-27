@@ -1,0 +1,70 @@
+﻿@model Domain.Member
+<form id="detailForm">
+    <div class="row">
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="MemberCode" class="form-label"></label>
+            <input asp-for="MemberCode" type="text" readonly class="form-control-plaintext" value="@Model.MemberCode" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="GivenNameKanji" class="form-label"></label>
+            <input asp-for="GivenNameKanji" type="text" class="form-control" value="@Model.GivenNameKanji" />
+            <span asp-validation-for="GivenNameKanji"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="FamilyNameKanji" class="form-label"></label>
+            <input asp-for="FamilyNameKanji" type="text" class="form-control" value="@Model.FamilyNameKanji" />
+            <span asp-validation-for="FamilyNameKanji"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="GivenNameKana" class="form-label"></label>
+            <input asp-for="GivenNameKana" type="text" class="form-control" value="@Model.GivenNameKana" />
+            <span asp-validation-for="GivenNameKana"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="FamilyNameKana" class="form-label"></label>
+            <input asp-for="FamilyNameKana" type="text" class="form-control" value="@Model.FamilyNameKana" />
+            <span asp-validation-for="FamilyNameKana"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="GivenName" class="form-label"></label>
+            <input asp-for="GivenName" type="text" class="form-control" value="@Model.GivenName" />
+            <span asp-validation-for="GivenName"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="FamilyName" class="form-label"></label>
+            <input asp-for="FamilyName" type="text" class="form-control" value="@Model.FamilyName" />
+            <span asp-validation-for="FamilyName"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="MailAddress" class="form-label"></label>
+            <input asp-for="MailAddress" type="email" class="form-control" value="@Model.MailAddress" />
+            <span asp-validation-for="MailAddress"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="DepartmentCode" class="form-label"></label>
+            <select asp-for="DepartmentCode" class="form-select" asp-items="@Model.DepartmentListItems">
+                <option value=""></option>
+            </select>
+            <span asp-validation-for="DepartmentCode"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="JoinedDate" class="form-label"></label>
+            <input asp-for="JoinedDate" type="date" max="9999-12-31" class="form-control" value="@Model.JoinedDate?.ToString(DEFAULT_DATEONLY_FORMAT)" />
+            <span asp-validation-for="JoinedDate"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="TerminationDate" class="form-label"></label>
+            <input asp-for="TerminationDate" type="date" max="9999-12-31" class="form-control" value="@Model.TerminationDate?.ToString(DEFAULT_DATEONLY_FORMAT)" />
+            <span asp-validation-for="TerminationDate"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label asp-for="Note" class="form-label"></label>
+            <textarea asp-for="Note" class="form-control" rows="4">@Model.Note</textarea>
+            <span asp-validation-for="Note"></span>
+        </div>
+    </div>
+</form>

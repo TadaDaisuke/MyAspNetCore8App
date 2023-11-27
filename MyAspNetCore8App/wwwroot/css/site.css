@@ -1,0 +1,107 @@
+:root {
+    --default-font-family: "Segoe UI",Meiryo,system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: var(--default-font-family);
+    margin-bottom: 60px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    font-family: "bootstrap-icons";
+    content: "\F285"; /* Chevron right */
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .table tbody tr {
+        font-size: smaller;
+    }
+
+        .table tbody tr:hover {
+            cursor: pointer;
+        }
+
+    .table tbody th,
+    .table tbody td {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+
+.btn-sort {
+    font-size: 0.8rem;
+    padding: 0.2em 0.5em;
+    border: none;
+    color: #fff;
+    background-color: var(--bs-blue);
+}
+
+.btn-to-top {
+    position: fixed;
+    right: 24px;
+    bottom: 6px;
+    margin: 2rem auto;
+    width: 52px;
+    height: 52px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+form .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0;
+}
+
+.form-control-plaintext:focus {
+    outline: none;
+}
+
+.field-validation-error {
+    font-size: 0.75rem;
+    color: var(--bs-primary);
+}
+
+    .field-validation-error::before {
+        content: "\F332";
+        font-family: "bootstrap-icons";
+        margin-right: 0.125rem;
+        vertical-align: text-top;
+    }
+
+.ui-autocomplete {
+    z-index: 2000;
+}
+
+    .ui-autocomplete .ui-menu-item-wrapper {
+        font-size: 0.9rem;
+    }
+
+.modal-body {
+    padding: 1rem 1.75rem 1.75rem;
+}

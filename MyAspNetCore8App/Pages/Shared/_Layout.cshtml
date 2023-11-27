@@ -1,0 +1,78 @@
+﻿@{
+    var breadCrumbs = ViewData["BreadCrumbs"] as IEnumerable<BreadCrumbItem>;
+}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @APPLICATION_NAME</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom">
+            <div class="container">
+                <span class="navbar-brand">@APPLICATION_NAME</span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <p class="navbar-nav flex-grow-1">
+                    </p>
+                    <p class="nav navbar-text">
+                        <i class="bi bi-person-circle"></i>&nbsp;@User.Identity?.Name
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <nav aria-label="Breadcrumb" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom mb-3">
+            <div class="container">
+                <ol class="breadcrumb mb-0">
+                    @{
+                        var bcCount = 0;
+                    }
+                    @foreach (var bc in breadCrumbs.OrEmptyIfNull())
+                    {
+                        <li class="breadcrumb-item">
+                            <a asp-area="" asp-page="@bc.Url">
+                                @if (bcCount == 0)
+                                {
+                                    <i class="bi bi-house-door-fill"></i> @bc.Title
+                                }
+                                else
+                                {
+                                    @bc.Title
+                                }
+                            </a>
+                        </li>
+                        bcCount++;
+                    }
+                    <li class="breadcrumb-item" active>
+                        @if (breadCrumbs == null || breadCrumbs.Count() == 0)
+                        {
+                            <i class="bi bi-house-door-fill"></i>
+                        }
+                        @ViewData["Title"]
+                    </li>
+                </ol>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

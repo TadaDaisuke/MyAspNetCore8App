@@ -1,0 +1,9 @@
+﻿@model IEnumerable<Domain.DepartmentListRow>
+@foreach (var row in Model)
+{
+    <tr data-detail-key="@row.Department.DepartmentCode">
+        <th>@row.Seq</th>
+        <td>@row.Department.DepartmentCode</td>
+        <td>@row.Department.DepartmentName</td>
+    </tr>
+}

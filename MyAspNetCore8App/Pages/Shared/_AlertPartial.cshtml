@@ -1,0 +1,29 @@
+﻿@model AlertPartialViewModel
+@switch (Model.AlertType)
+{
+    case AlertType.Danger:
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            @Model.AlertMessage
+        </div>
+        break;
+    case AlertType.Warning:
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            @Model.AlertMessage
+        </div>
+        break;
+    case AlertType.Success:
+        <div class="alert alert-success" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            @Model.AlertMessage
+        </div>
+        break;
+    case AlertType.Info:
+    default:
+        <div class="alert alert-primary" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            @Model.AlertMessage
+        </div>
+        break;
+}

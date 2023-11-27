@@ -1,0 +1,88 @@
+﻿@page
+@model MasterMaintenance.MemberModel
+@{
+    ViewData["Title"] = "メンバーマスター";
+    ViewData["BreadCrumbs"] = new List<BreadCrumbItem>
+    {
+        new("/Index", "Home"),
+    };
+    ViewData["ListColumns"] = new List<ListColumn>
+    {
+        new("Seq."),
+        new("メンバーコード", "member_code"),
+        new("漢字氏名"),
+        new("カナ氏名", "name_kana"),
+        new("英字氏名", "name_english"),
+        new("メールアドレス"),
+        new("所属部署", "department_code"),
+        new("着任日", "joined_date"),
+        new("離任日", "termination_date"),
+    };
+    ViewData["ModalTitle"] = "メンバー詳細";
+}
+<form id="searchConditionForm" asp-antiforgery="true">
+    <div class="row">
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.MemberNamePart" class="form-label"></label>
+            <input asp-for="SearchCondition.MemberNamePart" type="text" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.MemberCode" class="form-label"></label>
+            <input asp-for="SearchCondition.MemberCode" type="text" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.JoinedDateFrom" class="form-label"></label>
+            <input asp-for="SearchCondition.JoinedDateFrom" type="date" max="9999-12-31" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.JoinedDateTo" class="form-label"></label>
+            <input asp-for="SearchCondition.JoinedDateTo" type="date" max="9999-12-31" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <label asp-for="SearchCondition.DepartmentCode" class="form-label"></label>
+            <select asp-for="SearchCondition.DepartmentCode" class="form-select" asp-items="@Model.DepartmentListItems">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="form-check mt-4">
+                <input asp-for="SearchCondition.HasTerminatedMembers" class="form-check-input" type="checkbox" value="" />
+                <label asp-for="SearchCondition.HasTerminatedMembers" class="form-check-label"></label>
+            </div>
+        </div>
+        <div class="col-12 col-xl-6">
+            <label asp-for="SearchCondition.EmailDomain" class="form-label"></label><br />
+            @foreach (var (radioItem, index) in Model.EmailDomains.Select((v, i) => (v, i)))
+            {
+                <div class="form-check form-check-inline">
+                    <input asp-for="SearchCondition.EmailDomain" class="form-check-input" type="radio" id="EmailDomain@(index)" value="@radioItem.Value" checked="@radioItem.IsChecked" />
+                    <label class="form-check-label" for="EmailDomain@(index)">@radioItem.Label</label>
+                </div>
+            }
+        </div>
+    </div>
+    <input asp-for="SearchCondition.OffsetRows" type="hidden" value="0" />
+    <input asp-for="SearchCondition.SortItem" type="hidden" />
+    <input asp-for="SearchCondition.SortType" type="hidden" />
+</form>
+
+<partial name="_SearchListPartial" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_SearchListScriptsPartial" />
+    <script>
+        $("#SearchCondition_MemberCode").autocomplete({
+            source: (req, res) => {
+                let formData = new FormData();
+                formData.append("memberCodePart", req.term.trim());
+                formData.append("__RequestVerificationToken", token);
+                fetch("?Handler=SuggestMemberCode", { method: "POST", body: formData })
+                    .then(response => response.json())
+                    .then(data => res(data))
+                    .catch(error => res([]));
+            },
+            minLength: 2
+        });
+    </script>
+}

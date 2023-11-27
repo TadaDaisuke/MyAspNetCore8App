@@ -1,0 +1,16 @@
+﻿@model Domain.Department
+<form id="detailForm">
+    <div class="row">
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="DepartmentCode" class="form-label"></label>
+            <input asp-for="DepartmentCode" type="text" readonly class="form-control-plaintext" value="@Model.DepartmentCode" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6 col-xl-3">
+            <label asp-for="DepartmentName" class="form-label"></label>
+            <input asp-for="DepartmentName" type="text" class="form-control" value="@Model.DepartmentName" />
+            <span asp-validation-for="DepartmentName"></span>
+        </div>
+    </div>
+</form>

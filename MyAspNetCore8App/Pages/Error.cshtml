@@ -1,0 +1,10 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+<div class="row">
+    <div class="col">
+        <partial name="_AlertPartial" model="@(new AlertPartialViewModel(AlertType.Danger, "予期しないエラーが発生しました。"))" />
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Domain.MemberListRow>
+@foreach (var row in Model)
+{
+    <tr data-detail-key="@row.Member.MemberCode">
+        <th>@row.Seq</th>
+        <td>@row.Member.MemberCode</td>
+        <td>@row.Member.FullNameKanji</td>
+        <td>@row.Member.FullNameKana</td>
+        <td>@row.Member.FullName</td>
+        <td>@row.Member.MailAddress</td>
+        <td>@row.Member.DepartmentName</td>
+        <td>@row.Member.JoinedDate?.ToString("yyyy/MM/dd")</td>
+        <td>@row.Member.TerminationDate?.ToString("yyyy/MM/dd")</td>
+    </tr>
+}
