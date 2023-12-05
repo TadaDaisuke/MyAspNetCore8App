@@ -38,8 +38,8 @@ try
                 .ReadFrom.Configuration(builder.Configuration));
 
     // ドメインロジックの依存性注入
-    var connectionString = builder.Configuration.GetConnectionString("MyDatabaseConnectionString")
-        ?? throw new InvalidOperationException("MyDatabaseConnectionStringの取得に失敗しました");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString")
+        ?? throw new InvalidOperationException("DefaultConnectionStringの取得に失敗しました");
     builder.Services.AddSingleton(new MssqlContext(connectionString));
     builder.Services.AddSingleton<IDepartmentRepository, MssqlDepartmentRepository>();
     builder.Services.AddSingleton<IDepartmentService, DepartmentService>();
