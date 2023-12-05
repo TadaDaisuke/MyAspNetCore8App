@@ -19,7 +19,7 @@ RETURN (
                 ,given_name + N' ' + family_name AS full_name
                 ,family_name_kana + N' ' + given_name_kana AS full_name_kana
                 ,family_name_kanji + N' ' + given_name_kanji AS full_name_kanji
-            FROM member
+            FROM t_member
             ) AS main
         WHERE (
                 @member_name_part IS NULL
@@ -120,7 +120,7 @@ SELECT main.seq
     ,main.termination_date
     ,main.total_records_count
 FROM tvf_members_sorted(@member_name_part, @member_code, @joined_date_from, @joined_date_to, @department_code, @has_terminated_members, @email_domain, @sort_item, @sort_type) AS main
-INNER JOIN department AS dpt
+INNER JOIN t_department AS dpt
     ON dpt.department_code = main.department_code
 ORDER BY main.seq OFFSET @offset_rows ROWS
 FETCH NEXT @fetch_rows ROWS ONLY
@@ -148,7 +148,7 @@ SELECT main.member_code AS [メンバーコード]
     ,main.termination_date AS [離任日]
     ,main.note AS [備考]
 FROM tvf_members_sorted(@member_name_part, @member_code, @joined_date_from, @joined_date_to, @department_code, @has_terminated_members, @email_domain, @sort_item, @sort_type) AS main
-INNER JOIN department AS dpt
+INNER JOIN t_department AS dpt
     ON dpt.department_code = main.department_code
 ORDER BY main.seq
 GO

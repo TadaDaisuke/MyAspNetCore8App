@@ -7,17 +7,17 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-IF OBJECT_ID(N'department') IS NOT NULL
-    DROP TABLE department
+IF OBJECT_ID(N't_department') IS NOT NULL
+    DROP TABLE t_department
 GO
 
-CREATE TABLE department (
+CREATE TABLE t_department (
     [department_code] NVARCHAR(6) NOT NULL PRIMARY KEY CLUSTERED
     ,[department_name] NVARCHAR(128) NOT NULL
     );
 GO
 
-INSERT INTO department
+INSERT INTO t_department
 VALUES (N'X00001', N'営業部')
     ,(N'X00002', N'生産部')
     ,(N'X00003', N'物流部')

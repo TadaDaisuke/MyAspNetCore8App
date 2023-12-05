@@ -1,17 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyAspNetCore8App.Pages;
 
 /// <summary>
-/// Errorƒy[ƒWƒ‚ƒfƒ‹
+/// Errorãƒšãƒ¼ã‚¸ãƒ¢ãƒ‡ãƒ«
 /// </summary>
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
-public class ErrorModel() : PageModel
+public class ErrorModel : PageModel
 {
     /// <summary>
-    /// GETƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GETãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public void OnGet()
     {

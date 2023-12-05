@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCore8App.Domain;
@@ -7,25 +7,25 @@ using MyAspNetCore8App.PageParts;
 namespace MyAspNetCore8App.Pages.MasterMaintenance;
 
 /// <summary>
-/// Memberƒy[ƒWƒ‚ƒfƒ‹
+/// Memberãƒšãƒ¼ã‚¸ãƒ¢ãƒ‡ãƒ«
 /// </summary>
-/// <param name="memberService">ƒƒ“ƒo[ƒT[ƒrƒX</param>
-/// <param name="departmentService">•”ƒT[ƒrƒX</param>
+/// <param name="memberService">ãƒ¡ãƒ³ãƒãƒ¼ã‚µãƒ¼ãƒ“ã‚¹</param>
+/// <param name="departmentService">éƒ¨ç½²ã‚µãƒ¼ãƒ“ã‚¹</param>
 public class MemberModel(IMemberService memberService, IDepartmentService departmentService) : PageModel
 {
     /// <summary>
-    /// •”ƒhƒƒbƒvƒ_ƒEƒ“ƒŠƒXƒgƒAƒCƒeƒ€‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+    /// éƒ¨ç½²ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³ãƒªã‚¹ãƒˆã‚¢ã‚¤ãƒ†ãƒ ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
     /// </summary>
     public IEnumerable<SelectListItem> DepartmentListItems { get; } = departmentService.GetAllDepartments()
         .Select(x => new SelectListItem { Value = x.DepartmentCode, Text = x.DepartmentName })
         .ToList();
 
     /// <summary>
-    /// “dqƒ[ƒ‹ƒhƒƒCƒ“ƒ‰ƒWƒIƒ{ƒ^ƒ“ƒAƒCƒeƒ€‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+    /// é›»å­ãƒ¡ãƒ¼ãƒ«ãƒ‰ãƒ¡ã‚¤ãƒ³ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã‚¢ã‚¤ãƒ†ãƒ ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
     /// </summary>
     public IEnumerable<RadioItem> EmailDomains { get; } = new List<RadioItem>
         {
-            new("w’è‚È‚µ", "", true),
+            new("æŒ‡å®šãªã—", "", true),
             new(".com", ".com"),
             new(".net", ".net"),
             new(".org", ".org"),
@@ -34,20 +34,20 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
         };
 
     /// <summary>
-    /// ƒƒ“ƒo[ŒŸõğŒ
+    /// ãƒ¡ãƒ³ãƒãƒ¼æ¤œç´¢æ¡ä»¶
     /// </summary>
     [BindProperty]
     public MemberSearchCondition SearchCondition { get; set; } = new MemberSearchCondition();
 
     /// <summary>
-    /// GETƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GETãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public void OnGet()
     {
     }
 
     /// <summary>
-    /// SearchiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// Searchï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostSearch()
     {
@@ -58,7 +58,7 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
     }
 
     /// <summary>
-    /// GetDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GetDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostGetDetail([FromForm] string? detailKey)
     {
@@ -69,20 +69,20 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
     }
 
     /// <summary>
-    /// GetBlankDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GetBlankDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostGetBlankDetail()
     {
         var member = new Member
         {
-            MemberCode = "iV‹Kj",
+            MemberCode = "ï¼ˆæ–°è¦ï¼‰",
             DepartmentListItems = DepartmentListItems.ToList()
         };
         return Partial("MemberDetail", member);
     }
 
     /// <summary>
-    /// SaveDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// SaveDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public ContentResult OnPostSaveDetail([FromForm] Member? member)
     {
@@ -92,11 +92,11 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
             throw new InvalidDataException(nameof(member));
         }
         memberService.SaveMember(member);
-        return Content("XV‚µ‚Ü‚µ‚½");
+        return Content("æ›´æ–°ã—ã¾ã—ãŸ");
     }
 
     /// <summary>
-    /// DownloadExceliPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// DownloadExcelï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public FileContentResult OnPostDownloadExcel()
     {
@@ -106,7 +106,7 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
     }
 
     /// <summary>
-    /// SuggestMemberCodeiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// SuggestMemberCodeï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public JsonResult OnPostSuggestMemberCode(string? memberCodePart)
     {

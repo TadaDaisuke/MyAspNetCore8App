@@ -7,10 +7,10 @@ using System.Text;
 namespace MyAspNetCore8App.MssqlDataAccess;
 
 /// <summary>
-/// MyDatabaseアクセス関連のコンテキスト
+/// SQL Server データベースアクセス用のコンテキスト
 /// </summary>
 /// <param name="connectionString">DB接続文字列</param>
-public class MyDatabaseContext(string connectionString)
+public class MssqlContext(string connectionString)
 {
     /// <summary>
     /// 一覧検索の1回あたり読込み行数
@@ -62,16 +62,16 @@ public class MyDatabaseContext(string connectionString)
 
     /// <summary>
     /// SELECT文（SqlCommand）の実行結果をDictionaryのList形式で返す。
+    /// SELECTのみ（カラム情報不要）用途のオーバーロード。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
     public List<Dictionary<string, string?>> GetRowList(SqlCommand cmd) => GetRowList(cmd, out _);
 
     /// <summary>
-    /// SQL（SqlCommand）を実行する。
+    /// SqlCommandを実行する。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
-    /// <returns>SqlCommand自身への参照</returns>
-    public SqlCommand ExecuteSql(SqlCommand cmd)
+    public void ExecuteSqlCommand(SqlCommand cmd)
     {
         var callerMethod = new StackFrame(1)?.GetMethod();
         var logMessage = new StringBuilder()
@@ -85,7 +85,43 @@ public class MyDatabaseContext(string connectionString)
             cmd.Connection = conn;
             cmd.ExecuteNonQuery();
         }
-        return cmd;
+    }
+
+    /// <summary>
+    /// 複数のSqlCommandを、同一トランザクション内で実行する。
+    /// </summary>
+    /// <param name="cmds">SqlCommandオブジェクトのコレクション</param>
+    public void ExecuteSqlCommands(IEnumerable<SqlCommand> cmds)
+    {
+        var callerMethod = new StackFrame(1)?.GetMethod();
+        using (var conn = new SqlConnection(connectionString))
+        {
+            conn.Open();
+            using (var transaction = conn.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var cmd in cmds)
+                    {
+                        var logMessage = new StringBuilder()
+                            .AppendLine($"SQLを実行します。呼び出し元: {callerMethod?.ReflectedType?.FullName}.{callerMethod?.Name}")
+                            .Append(GetCommandLogString(cmd))
+                            .ToString();
+                        Log.ForContext(GetType()).Information(logMessage);
+                        cmd.Connection = conn;
+                        cmd.Transaction = transaction;
+                        cmd.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Log.ForContext(GetType()).Information(ex, "エラーが発生したため、ロールバックします。");
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
     }
 
     /// <summary>

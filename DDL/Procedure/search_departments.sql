@@ -6,7 +6,7 @@ RETURNS TABLE
 AS
 RETURN (
         SELECT *
-        FROM department
+        FROM t_department
         WHERE @department_name_part IS NULL
             OR department_name LIKE N'%' + @department_name_part + N'%'
         )

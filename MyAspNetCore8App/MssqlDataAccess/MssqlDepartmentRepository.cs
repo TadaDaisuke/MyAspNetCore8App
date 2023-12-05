@@ -8,9 +8,9 @@ namespace MyAspNetCore8App.MssqlDataAccess;
 /// <summary>
 /// 部署リポジトリー実装クラス
 /// </summary>
-/// <param name="context">MyDatabaseアクセス関連のコンテキスト</param>
+/// <param name="context">SQL Server データベースアクセス用のコンテキスト</param>
 /// <param name="excelCreator">Excel生成ユーティリティー</param>
-public class MssqlDepartmentRepository(MyDatabaseContext context, IExcelCreator excelCreator) : IDepartmentRepository
+public class MssqlDepartmentRepository(MssqlContext context, IExcelCreator excelCreator) : IDepartmentRepository
 {
     /// <inheritdoc/>
     public IEnumerable<DepartmentListRow> SearchDepartments(DepartmentSearchCondition searchCondition)
@@ -59,13 +59,8 @@ public class MssqlDepartmentRepository(MyDatabaseContext context, IExcelCreator 
     {
         var cmd = new SqlCommand("sp_save_department") { CommandType = CommandType.StoredProcedure }
             .AddParameter("@department_code", SqlDbType.NVarChar, department.DepartmentCode)
-            .AddParameter("@department_name", SqlDbType.NVarChar, department.DepartmentName)
-            .AddOutputParameter("@error_message", SqlDbType.NVarChar, 4000);
-        var errorMessage = context.ExecuteSql(cmd).Parameters["@error_message"].Value.ToString();
-        if (!string.IsNullOrWhiteSpace(errorMessage))
-        {
-            throw new Exception(errorMessage);
-        }
+            .AddParameter("@department_name", SqlDbType.NVarChar, department.DepartmentName);
+        context.ExecuteSqlCommand(cmd);
     }
 
     /// <inheritdoc/>

@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+ï»¿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyAspNetCore8App.Pages;
 
 /// <summary>
-/// Indexƒy[ƒWƒ‚ƒfƒ‹
+/// Indexãƒšãƒ¼ã‚¸ãƒ¢ãƒ‡ãƒ«
 /// </summary>
-public class IndexModel() : PageModel
+public class IndexModel : PageModel
 {
     /// <summary>
-    /// GETƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GETãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public void OnGet()
     {

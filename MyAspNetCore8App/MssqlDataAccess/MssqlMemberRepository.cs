@@ -8,9 +8,9 @@ namespace MyAspNetCore8App.MssqlDataAccess;
 /// <summary>
 /// メンバーリポジトリー実装クラス
 /// </summary>
-/// <param name="context">MyDatabaseアクセス関連のコンテキスト</param>
+/// <param name="context">SQL Server データベースアクセス用のコンテキスト</param>
 /// <param name="excelCreator">Excel生成ユーティリティー</param>
-public class MssqlMemberRepository(MyDatabaseContext context, IExcelCreator excelCreator) : IMemberRepository
+public class MssqlMemberRepository(MssqlContext context, IExcelCreator excelCreator) : IMemberRepository
 {
     /// <inheritdoc/>
     public IEnumerable<MemberListRow> SearchMembers(MemberSearchCondition searchCondition)
@@ -94,13 +94,8 @@ public class MssqlMemberRepository(MyDatabaseContext context, IExcelCreator exce
             .AddParameter("@department_code", SqlDbType.NVarChar, member.DepartmentCode)
             .AddParameter("@joined_date", SqlDbType.Date, member.JoinedDate)
             .AddParameter("@termination_date", SqlDbType.Date, member.TerminationDate)
-            .AddParameter("@note", SqlDbType.NVarChar, member.Note)
-            .AddOutputParameter("@error_message", SqlDbType.NVarChar, 4000);
-        var errorMessage = context.ExecuteSql(cmd).Parameters["@error_message"].Value.ToString();
-        if (!string.IsNullOrWhiteSpace(errorMessage))
-        {
-            throw new Exception(errorMessage);
-        }
+            .AddParameter("@note", SqlDbType.NVarChar, member.Note);
+        context.ExecuteSqlCommand(cmd);
     }
 
     /// <inheritdoc/>

@@ -1,63 +1,58 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyAspNetCore8App.Domain;
 
 namespace MyAspNetCore8App.Pages.MasterMaintenance;
 
 /// <summary>
-/// Departmentƒy[ƒWƒ‚ƒfƒ‹
+/// Departmentãƒšãƒ¼ã‚¸ãƒ¢ãƒ‡ãƒ«
 /// </summary>
-/// <param name="departmentService">•”ƒT[ƒrƒX</param>
+/// <param name="departmentService">éƒ¨ç½²ã‚µãƒ¼ãƒ“ã‚¹</param>
 public class DepartmentModel(IDepartmentService departmentService) : PageModel
 {
     /// <summary>
-    /// •”ƒT[ƒrƒX
-    /// </summary>
-    private readonly IDepartmentService _departmentService = departmentService;
-
-    /// <summary>
-    /// •”ŒŸõğŒ
+    /// éƒ¨ç½²æ¤œç´¢æ¡ä»¶
     /// </summary>
     [BindProperty]
     public DepartmentSearchCondition SearchCondition { get; set; } = new DepartmentSearchCondition();
 
     /// <summary>
-    /// GETƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GETãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public void OnGet()
     {
     }
 
     /// <summary>
-    /// SearchiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// Searchï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostSearch()
     {
-        var departments = _departmentService.SearchDepartments(SearchCondition);
+        var departments = departmentService.SearchDepartments(SearchCondition);
         Response.Headers.Append("X-total-records-count", (departments.FirstOrDefault()?.TotalRecordsCount ?? 0).ToString());
         Response.Headers.Append("X-last-seq", departments.Max(x => x?.Seq)?.ToString());
         return Partial("DepartmentList", departments);
     }
 
     /// <summary>
-    /// GetDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GetDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostGetDetail([FromForm] string? detailKey)
     {
         ArgumentNullException.ThrowIfNull(detailKey);
-        return Partial("DepartmentDetail", _departmentService.GetDepartment(detailKey));
+        return Partial("DepartmentDetail", departmentService.GetDepartment(detailKey));
     }
 
     /// <summary>
-    /// GetBlankDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// GetBlankDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public PartialViewResult OnPostGetBlankDetail()
     {
-        return Partial("DepartmentDetail", new Department { DepartmentCode = "iV‹Kj" });
+        return Partial("DepartmentDetail", new Department { DepartmentCode = "ï¼ˆæ–°è¦ï¼‰" });
     }
 
     /// <summary>
-    /// SaveDetailiPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// SaveDetailï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public ContentResult OnPostSaveDetail([FromForm] Department? department)
     {
@@ -66,16 +61,16 @@ public class DepartmentModel(IDepartmentService departmentService) : PageModel
         {
             throw new InvalidDataException(nameof(department));
         }
-        _departmentService.SaveDepartment(department);
-        return Content("XV‚µ‚Ü‚µ‚½");
+        departmentService.SaveDepartment(department);
+        return Content("æ›´æ–°ã—ã¾ã—ãŸ");
     }
 
     /// <summary>
-    /// DownloadExceliPOSTjƒŠƒNƒGƒXƒgƒnƒ“ƒhƒ‰[
+    /// DownloadExcelï¼ˆPOSTï¼‰ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ©ãƒ¼
     /// </summary>
     public FileContentResult OnPostDownloadExcel()
     {
-        var bytes = _departmentService.DownloadDepartments(SearchCondition);
+        var bytes = departmentService.DownloadDepartments(SearchCondition);
         Response.Headers.Append("X-download-file-name", $"Departments_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx");
         return File(bytes, CONTENT_TYPE_XLSX);
     }

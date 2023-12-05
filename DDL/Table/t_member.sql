@@ -7,11 +7,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-IF OBJECT_ID(N'member') IS NOT NULL
-    DROP TABLE member
+IF OBJECT_ID(N't_member') IS NOT NULL
+    DROP TABLE t_member
 GO
 
-CREATE TABLE member (
+CREATE TABLE t_member (
     [member_code] NVARCHAR(8) NOT NULL PRIMARY KEY CLUSTERED
     ,[given_name] NVARCHAR(128) NOT NULL
     ,[family_name] NVARCHAR(128) NOT NULL
@@ -27,14 +27,14 @@ CREATE TABLE member (
     );
 GO
 
-ALTER TABLE member
-    WITH CHECK ADD CONSTRAINT FK_member_department FOREIGN KEY (department_code) REFERENCES department(department_code)
+ALTER TABLE t_member
+    WITH CHECK ADD CONSTRAINT fk_t_member_t_department FOREIGN KEY (department_code) REFERENCES t_department(department_code)
 GO
 
-ALTER TABLE member CHECK CONSTRAINT FK_member_department
+ALTER TABLE t_member CHECK CONSTRAINT fk_t_member_t_department
 GO
 
-INSERT INTO member
+INSERT INTO t_member
 VALUES (N'A0000001', N'Munehiro', N'Nishizawa', N'ムネヒロ', N'ニシザワ', N'宗洋', N'西澤', N'nishizawa930@example.ne.jp', '2004-09-30', NULL, N'X00004', NULL)
     ,(N'A0000002', N'Mihoko', N'Miura', N'ミホコ', N'ミウラ', N'みほこ', N'三浦', N'miuramihoko@example.com', '2014-11-28', NULL, N'X00015', NULL)
     ,(N'A0000003', N'Masako', N'Yamada', N'マサコ', N'ヤマダ', N'雅子', N'山田', N'yamada_masako@example.jp', '2012-09-06', NULL, N'X00004', NULL)

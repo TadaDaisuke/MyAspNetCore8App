@@ -15,6 +15,6 @@ SELECT TOP 1 member_code
     ,joined_date
     ,termination_date
     ,note
-FROM member
+FROM t_member
 WHERE member_code = @member_code
 GO

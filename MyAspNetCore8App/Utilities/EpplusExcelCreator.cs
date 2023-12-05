@@ -9,9 +9,9 @@ namespace MyAspNetCore8App.Utilities;
 /// <summary>
 /// EPPlus を使用した、Excel生成ユーティリティー実装クラス
 /// </summary>
-/// <param name="context">MyDatabaseアクセス関連のコンテキスト</param>
+/// <param name="context">SQL Server データベースアクセス用のコンテキスト</param>
 /// <param name="excelSettings">Excel出力用設定</param>
-public class EpplusExcelCreator(MyDatabaseContext context, ExcelSettings excelSettings) : IExcelCreator
+public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSettings) : IExcelCreator
 {
     /// <inheritdoc/>
     public byte[] CreateFileBytes(SqlCommand cmd, string sheetName)
@@ -222,7 +222,9 @@ public class EpplusExcelCreator(MyDatabaseContext context, ExcelSettings excelSe
                 var sheet = workbook.Worksheets.Add(newSheetName);
                 var fontName = excelSettings.FontName;
                 var fontSize = excelSettings.FontSize.ToFloat(10F);
+#pragma warning disable CA1416
                 sheet.Cells.Style.Font.SetFromFont(new Font(fontName, fontSize));
+#pragma warning restore CA1416
                 return sheet;
             }
         }

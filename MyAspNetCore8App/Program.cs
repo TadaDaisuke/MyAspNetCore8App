@@ -1,4 +1,4 @@
-global using MyAspNetCore8App.Common;
+ï»¿global using MyAspNetCore8App.Common;
 global using static MyAspNetCore8App.Common.Constants;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using MyAspNetCore8App.Domain;
@@ -8,7 +8,7 @@ using MyAspNetCore8App.Utilities;
 
 using Serilog;
 
-// ‹N“®‚ÌƒGƒ‰[‚ğ‹L˜^‚·‚é‚½‚ß‚Ìƒu[ƒgƒXƒgƒ‰ƒbƒvƒƒK[
+// èµ·å‹•æ™‚ã®ã‚¨ãƒ©ãƒ¼ã‚’è¨˜éŒ²ã™ã‚‹ãŸã‚ã®ãƒ–ãƒ¼ãƒˆã‚¹ãƒˆãƒ©ãƒƒãƒ—ãƒ­ã‚¬ãƒ¼
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
@@ -26,7 +26,7 @@ try
     });
     builder.Services.AddRazorPages();
 
-    // ƒƒMƒ“ƒOŠÖ˜A‚ÌˆË‘¶«’“ü
+    // ãƒ­ã‚®ãƒ³ã‚°é–¢é€£ã®ä¾å­˜æ€§æ³¨å…¥
     builder.Services.AddTransient<HttpContextEnricher>();
     builder.Services.AddHttpContextAccessor();
     builder.Host
@@ -34,44 +34,43 @@ try
             loggerConfiguration
                 .Enrich.FromLogContext()
                 .Enrich.With(serviceProvider.GetService<HttpContextEnricher>()
-                    ?? throw new InvalidOperationException("HttpContextEnricher‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½"))
+                    ?? throw new InvalidOperationException("HttpContextEnricherã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ"))
                 .ReadFrom.Configuration(builder.Configuration));
 
-    // ƒhƒƒCƒ“ƒƒWƒbƒN‚ÌˆË‘¶«’“ü
+    // ãƒ‰ãƒ¡ã‚¤ãƒ³ãƒ­ã‚¸ãƒƒã‚¯ã®ä¾å­˜æ€§æ³¨å…¥
     var connectionString = builder.Configuration.GetConnectionString("MyDatabaseConnectionString")
-        ?? throw new InvalidOperationException("Ú‘±•¶š—ñ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
-    var context = new MyDatabaseContext(connectionString);
-    builder.Services.AddSingleton(context);
+        ?? throw new InvalidOperationException("MyDatabaseConnectionStringã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ");
+    builder.Services.AddSingleton(new MssqlContext(connectionString));
     builder.Services.AddSingleton<IDepartmentRepository, MssqlDepartmentRepository>();
     builder.Services.AddSingleton<IDepartmentService, DepartmentService>();
     builder.Services.AddSingleton<IMemberRepository, MssqlMemberRepository>();
     builder.Services.AddSingleton<IMemberService, MemberService>();
 
-    // Excelo—ÍŠÖ˜A‚ÌˆË‘¶«’“ü
+    // Excelå‡ºåŠ›é–¢é€£ã®ä¾å­˜æ€§æ³¨å…¥
     var excelSettings = builder.Configuration.GetSection("ExcelSettings").Get<ExcelSettings>()
-        ?? throw new InvalidOperationException("ExcelSettings‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½");
+        ?? throw new InvalidOperationException("ExcelSettingsã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ");
     builder.Services.AddSingleton(excelSettings);
     builder.Services.AddSingleton<IExcelCreator, EpplusExcelCreator>();
 
-    // js/css‚Ìƒ~ƒjƒtƒ@ƒC‚ÌˆË‘¶«’“ü
+    // js/cssã®ãƒŸãƒ‹ãƒ•ã‚¡ã‚¤ã®ä¾å­˜æ€§æ³¨å…¥
     builder.Services.AddWebOptimizer();
 
     var app = builder.Build();
 
     if (app.Environment.IsEnvironment("LocalDebug"))
     {
-        // ƒ[ƒJƒ‹ƒfƒoƒbƒO‚ÍŠJ”­Ò—pƒGƒ‰[ƒy[ƒW‚ğ—LŒø‰»
+        // ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒãƒƒã‚°æ™‚ã¯é–‹ç™ºè€…ç”¨ã‚¨ãƒ©ãƒ¼ãƒšãƒ¼ã‚¸ã‚’æœ‰åŠ¹åŒ–
         app.UseDeveloperExceptionPage();
     }
     else
     {
-        // ’Êí‚ÌƒGƒ‰[ƒy[ƒW‚ğ—LŒø‰»
+        // é€šå¸¸ã®ã‚¨ãƒ©ãƒ¼ãƒšãƒ¼ã‚¸ã‚’æœ‰åŠ¹åŒ–
         app.UseExceptionHandler("/Error");
-        // HTTP Strict Transport Security ƒvƒƒgƒRƒ‹ƒwƒbƒ_[‚ğ—LŒø‰»
+        // HTTP Strict Transport Security ãƒ—ãƒ­ãƒˆã‚³ãƒ«ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’æœ‰åŠ¹åŒ–
         app.UseHsts();
     }
 
-    // js/css‚Ìƒ~ƒjƒtƒ@ƒC‚ğ—LŒø‰»
+    // js/cssã®ãƒŸãƒ‹ãƒ•ã‚¡ã‚¤ã‚’æœ‰åŠ¹åŒ–
     app.UseWebOptimizer();
 
     app.UseHttpsRedirection();
@@ -88,7 +87,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "‹N“®‚É—\Šú‚µ‚È‚¢ƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+    Log.Fatal(ex, "èµ·å‹•æ™‚ã«äºˆæœŸã—ãªã„ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
 }
 finally
 {
