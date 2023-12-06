@@ -114,9 +114,9 @@ public class MssqlContext(string connectionString)
                     }
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Log.ForContext(GetType()).Information(ex, "エラーが発生したため、ロールバックします。");
+                    Log.ForContext(GetType()).Information("エラーが発生したため、ロールバックします。");
                     transaction.Rollback();
                     throw;
                 }

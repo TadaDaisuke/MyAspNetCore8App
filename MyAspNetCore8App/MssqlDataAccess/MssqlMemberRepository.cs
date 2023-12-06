@@ -51,7 +51,7 @@ public class MssqlMemberRepository(MssqlContext context, IExcelCreator excelCrea
     /// </summary>
     private static Member CreateMember(Dictionary<string, string?> row)
     {
-        var member = new Member()
+        var member = new Member
         {
             MemberCode = row["member_code"],
             GivenName = row["given_name"],
