@@ -119,6 +119,6 @@ public class MssqlMemberRepository(MssqlContext context, IExcelCreator excelCrea
     {
         var cmd = new SqlCommand("sp_suggest_member_code") { CommandType = CommandType.StoredProcedure }
             .AddParameter("@member_code_part", SqlDbType.NVarChar, memberCodePart);
-        return context.GetRowList(cmd).Select(row => row["member_code"] ?? string.Empty).ToList();
+        return context.GetRowList(cmd).Select(row => row["member_code"] ?? string.Empty);
     }
 }
