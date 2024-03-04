@@ -39,12 +39,9 @@
                             <a asp-area="" asp-page="@bc.Url">
                                 @if (bc == breadCrumbs.First())
                                 {
-                                    <i class="bi bi-house-door-fill"></i> @bc.Title
+                                    <i class="bi bi-house-door-fill"></i>
                                 }
-                                else
-                                {
-                                    @bc.Title
-                                }
+                                @bc.Title
                             </a>
                         </li>
                     }
