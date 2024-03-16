@@ -2,7 +2,6 @@
 using MyAspNetCore8App.MssqlDataAccess;
 using OfficeOpenXml;
 using System.Data;
-using System.Drawing;
 
 namespace MyAspNetCore8App.Utilities;
 
@@ -76,8 +75,10 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
             {
                 for (var columnIndex = 1; columnIndex <= schemaTable.Rows.Count; columnIndex++)
                 {
+                    var schemaRow = schemaTable.Rows[columnIndex - 1];
+                    var column = sheet.Column(columnIndex);
                     // 列毎の書式設定
-                    switch (schemaTable.Rows[columnIndex - 1].Field<string>("DataTypeName"))
+                    switch (schemaRow.Field<string>("DataTypeName"))
                     {
                         case "char":
                         case "varchar":
@@ -85,33 +86,33 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
                         case "nvarchar":
                         case "binary":
                         case "varbinary":
-                            sheet.Column(columnIndex).Style.Numberformat.Format = "@";
+                            column.Style.Numberformat.Format = "@";
                             break;
                         case "date":
-                            sheet.Column(columnIndex).Style.Numberformat.Format = "yyyy-MM-dd";
+                            column.Style.Numberformat.Format = "yyyy-MM-dd";
                             break;
                         case "datetime":
-                            sheet.Column(columnIndex).Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss";
+                            column.Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss";
                             break;
                         case "int":
                         case "bigint":
                         case "smallint":
                         case "tinyint":
-                            sheet.Column(columnIndex).Style.Numberformat.Format = "0";
+                            column.Style.Numberformat.Format = "0";
                             break;
                         case "decimal":
                             var decimalFormat = "#,##0";
-                            var scale = schemaTable.Rows[columnIndex - 1].Field<short>("NumericScale");
+                            var scale = schemaRow.Field<short>("NumericScale");
                             if (scale > 0)
                             {
                                 decimalFormat += $".{new string('0', scale)}";
                             }
-                            sheet.Column(columnIndex).Style.Numberformat.Format = decimalFormat;
+                            column.Style.Numberformat.Format = decimalFormat;
                             break;
                     }
                     // タイトル行の設定
                     sheet.Cells[1, columnIndex].Style.Numberformat.Format = "@";
-                    sheet.Cells[1, columnIndex].Value = schemaTable.Rows[columnIndex - 1].Field<string>("ColumnName");
+                    sheet.Cells[1, columnIndex].Value = schemaRow.Field<string>("ColumnName");
                     sheet.Cells[1, columnIndex].Style.TextRotation = 180;
                 }
             }
@@ -220,11 +221,8 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
             else
             {
                 var sheet = workbook.Worksheets.Add(newSheetName);
-                var fontName = excelSettings.FontName;
-                var fontSize = excelSettings.FontSize.ToFloat(10F);
-#pragma warning disable CA1416
-                sheet.Cells.Style.Font.SetFromFont(new Font(fontName, fontSize));
-#pragma warning restore CA1416
+                sheet.Cells.Style.Font.Name = excelSettings.FontName;
+                sheet.Cells.Style.Font.Size = excelSettings.FontSize;
                 return sheet;
             }
         }
@@ -243,8 +241,7 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
         {
             if (schemaTable.Rows[columnIndex - 1].Field<string>("DataTypeName") == "bit")
             {
-                var fontSize = excelSettings.FontSize.ToFloat(10F);
-                sheet.Column(columnIndex).Width = 0.7 * fontSize;
+                sheet.Column(columnIndex).Width = 0.7 * excelSettings.FontSize;
             }
             else
             {

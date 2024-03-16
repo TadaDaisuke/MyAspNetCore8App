@@ -39,13 +39,6 @@ public static class ExtensionMethods
         => int.TryParse(s, out int i) ? i : defaultValue;
 
     /// <summary>
-    /// stringをfloatに変換した値を返す。
-    /// </summary>
-    /// <param name="defaultValue">[オプション] 変換できなかった場合に返す値（既定値 = 0.0F）。</param>
-    public static float ToFloat(this string? s, float defaultValue = 0.0F)
-        => float.TryParse(s, out float f) ? f : defaultValue;
-
-    /// <summary>
     /// stringをint（null許容型）に変換した値を返す。変換できなかった場合はnullを返す。
     /// </summary>
     public static int? ToNullableInt(this string? s)
