@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace MyAspNetCore8App.Utilities;
+namespace MyAspNetCore8App.MssqlDataAccess.Utilities;
 
 /// <summary>
 /// Excel生成ユーティリティーインターフェース

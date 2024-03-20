@@ -1,4 +1,4 @@
-﻿namespace MyAspNetCore8App.Utilities;
+﻿namespace MyAspNetCore8App.MssqlDataAccess.Utilities;
 
 /// <summary>
 /// Excel出力用設定

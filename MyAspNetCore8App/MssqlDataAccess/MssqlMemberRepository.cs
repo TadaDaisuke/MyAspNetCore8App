@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using MyAspNetCore8App.Domain;
-using MyAspNetCore8App.Utilities;
+using MyAspNetCore8App.MssqlDataAccess.Utilities;
 using System.Data;
 
 namespace MyAspNetCore8App.MssqlDataAccess;

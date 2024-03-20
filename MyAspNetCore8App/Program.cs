@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using MyAspNetCore8App.Domain;
 using MyAspNetCore8App.Logging;
 using MyAspNetCore8App.MssqlDataAccess;
-using MyAspNetCore8App.Utilities;
+using MyAspNetCore8App.MssqlDataAccess.Utilities;
 using Serilog;
 
 // 起動時のエラーを記録するためのブートストラップロガー

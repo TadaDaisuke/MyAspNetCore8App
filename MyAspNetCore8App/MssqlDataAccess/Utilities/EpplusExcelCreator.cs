@@ -1,9 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using MyAspNetCore8App.MssqlDataAccess;
 using OfficeOpenXml;
 using System.Data;
 
-namespace MyAspNetCore8App.Utilities;
+namespace MyAspNetCore8App.MssqlDataAccess.Utilities;
 
 /// <summary>
 /// EPPlus を使用した、Excel生成ユーティリティー実装クラス
