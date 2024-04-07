@@ -17,21 +17,20 @@ public class MemberModel(IMemberService memberService, IDepartmentService depart
     /// 部署ドロップダウンリストアイテムのコレクション
     /// </summary>
     public IEnumerable<SelectListItem> DepartmentListItems { get; } = departmentService.GetAllDepartments()
-        .Select(x => new SelectListItem { Value = x.DepartmentCode, Text = x.DepartmentName })
-        .ToList();
+        .Select(x => new SelectListItem { Value = x.DepartmentCode, Text = x.DepartmentName });
 
     /// <summary>
     /// 電子メールドメインラジオボタンアイテムのコレクション
     /// </summary>
-    public IEnumerable<RadioItem> EmailDomains { get; } = new List<RadioItem>
-        {
+    public IEnumerable<RadioItem> EmailDomains { get; } =
+        [
             new("指定なし", "", true),
             new(".com", ".com"),
             new(".net", ".net"),
             new(".org", ".org"),
             new(".co.jp", ".co.jp"),
             new(".ne.jp", ".ne.jp"),
-        };
+        ];
 
     /// <summary>
     /// メンバー検索条件
