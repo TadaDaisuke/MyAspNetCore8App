@@ -17,7 +17,7 @@ public static class ExtensionMethods
     /// 渡されたコレクションがnullの場合は空のコレクションを、それ以外は渡されたコレクションをそのまま返す。
     /// </summary>
     public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T>? values)
-        => values ?? Enumerable.Empty<T>();
+        => values ?? [];
 
     /// <summary>
     /// 渡されたコレクション内からnullのアイテムを除いたコレクションを返す。
