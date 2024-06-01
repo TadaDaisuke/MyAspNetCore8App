@@ -8,9 +8,9 @@ const addNewButton = document.querySelector("#addNewButton");
 addNewButton.addEventListener("click", () => fetchAndShowModal("?Handler=GetBlankDetail", new FormData()));
 // 検索結果各行のクリックイベント
 mainTable.addEventListener("click", e => {
-    let detailKey = e.target.closest("tr")?.getAttribute("data-detail-key");
+    const detailKey = e.target.closest("tr")?.getAttribute("data-detail-key");
     if (detailKey) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append("detailKey", detailKey);
         fetchAndShowModal("?Handler=GetDetail", formData);
     }
@@ -35,7 +35,7 @@ function fetchAndShowModal(url, formData) {
             modalBodyContent.innerHTML = `<div>${error}</div>`;
         })
         .finally(() => {
-            let newForm = modalBodyContent.querySelector("#detailForm");
+            const newForm = modalBodyContent.querySelector("#detailForm");
             $(newForm).removeData("validator");
             $(newForm).removeData("unobtrusiveValidation");
             $.validator.unobtrusive.parse($(newForm));
@@ -75,7 +75,7 @@ function enableSaveButton(newFormElem) {
 // モーダルの保存ボタンクリックイベント
 saveButton.addEventListener("click", () => {
     detailModal.hide();
-    let formData = new FormData(document.querySelector("#detailForm"));
+    const formData = new FormData(document.querySelector("#detailForm"));
     formData.append("__RequestVerificationToken", token);
     fetch("?Handler=SaveDetail", { method: "POST", body: formData })
         .then(response => {
