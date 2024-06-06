@@ -49,7 +49,7 @@ public class MssqlMemberRepository(MssqlContext context, IExcelCreator excelCrea
     /// <summary>
     /// 検索結果1行から、Memberオブジェクトを生成して返す。
     /// </summary>
-    private static Member CreateMember(Dictionary<string, string?> row)
+    private static Member CreateMember(IDictionary<string, string?> row)
     {
         var member = new Member
         {

@@ -39,7 +39,7 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
         // シートの生成
         var sheet = AddWorksheet(package.Workbook, sheetName);
         // クエリの実行
-        List<Dictionary<string, string?>> rowList;
+        IList<IDictionary<string, string?>> rowList;
         DataTable schemaTable;
         try
         {

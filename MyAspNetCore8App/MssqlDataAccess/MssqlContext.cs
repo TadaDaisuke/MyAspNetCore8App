@@ -22,9 +22,9 @@ public class MssqlContext(string connectionString)
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
     /// <param name="schemaTable">カラム情報出力用DataTable</param>
-    public List<Dictionary<string, string?>> GetRowList(SqlCommand cmd, out DataTable schemaTable)
+    public IList<IDictionary<string, string?>> GetRowList(SqlCommand cmd, out DataTable schemaTable)
     {
-        var list = new List<Dictionary<string, string?>>();
+        var list = new List<IDictionary<string, string?>>();
         using (var conn = new SqlConnection(connectionString))
         {
             conn.Open();
@@ -65,7 +65,7 @@ public class MssqlContext(string connectionString)
     /// SELECTのみ（カラム情報不要）用途のオーバーロード。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
-    public List<Dictionary<string, string?>> GetRowList(SqlCommand cmd) => GetRowList(cmd, out _);
+    public IList<IDictionary<string, string?>> GetRowList(SqlCommand cmd) => GetRowList(cmd, out _);
 
     /// <summary>
     /// SqlCommandを実行する。
