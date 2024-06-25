@@ -1,5 +1,5 @@
 ﻿@{
-    var cols = (ViewData["ListColumns"] as IEnumerable<ListColumn>).OrEmptyIfNull();
+    var cols = (ViewData["ListColumns"] as IEnumerable<ListColumn>) ?? [];
     var hasModal = (ViewData["ModalTitle"] != null);
     var tableClass = "table mt-2";
     if (hasModal)

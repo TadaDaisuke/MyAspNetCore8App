@@ -14,12 +14,6 @@ public static class ExtensionMethods
         => values.Contains(source);
 
     /// <summary>
-    /// 渡されたコレクションがnullの場合は空のコレクションを、それ以外は渡されたコレクションをそのまま返す。
-    /// </summary>
-    public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T>? values)
-        => values ?? [];
-
-    /// <summary>
     /// 渡されたコレクション内からnullのアイテムを除いたコレクションを返す。
     /// </summary>
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> values) where T : class

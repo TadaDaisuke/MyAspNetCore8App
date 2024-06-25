@@ -1,5 +1,5 @@
 ﻿@{
-    var breadCrumbs = (ViewData["BreadCrumbs"] as IEnumerable<BreadCrumbItem>).OrEmptyIfNull();
+    var breadCrumbs = (ViewData["BreadCrumbs"] as IEnumerable<BreadCrumbItem>) ?? [];
 }
 <!DOCTYPE html>
 <html lang="ja">
