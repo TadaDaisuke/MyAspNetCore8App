@@ -1,5 +1,6 @@
 ﻿@{
     var breadCrumbs = (ViewData["BreadCrumbs"] as IEnumerable<BreadCrumbItem>) ?? [];
+    var isSystemPage = ViewData["IsSystemPage"] as bool? ?? false;
 }
 <!DOCTYPE html>
 <html lang="ja">
@@ -37,7 +38,7 @@
                     {
                         <li class="breadcrumb-item">
                             <a asp-area="" asp-page="@bc.Url">
-                                @if (bc == breadCrumbs.First())
+                                @if (bc == breadCrumbs.First() && !isSystemPage)
                                 {
                                     <i class="bi bi-house-door-fill"></i>
                                 }
@@ -46,7 +47,7 @@
                         </li>
                     }
                     <li class="breadcrumb-item" active>
-                        @if (breadCrumbs.Count() == 0)
+                        @if (breadCrumbs.Count() == 0 && !isSystemPage)
                         {
                             <i class="bi bi-house-door-fill"></i>
                         }
