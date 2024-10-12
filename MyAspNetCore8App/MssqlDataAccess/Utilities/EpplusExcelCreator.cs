@@ -209,6 +209,7 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
             : (sheetName.Length > 31)
                 ? sheetName[..31]
                 : sheetName;
+        ExcelWorksheet? sheet = null;
         for (var i = 2; i <= 100; i++)
         {
             if (workbook.Worksheets.OfType<ExcelWorksheet>().Any(x => x.Name == newSheetName))
@@ -217,13 +218,14 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
             }
             else
             {
-                var sheet = workbook.Worksheets.Add(newSheetName);
-                sheet.Cells.Style.Font.Name = excelSettings.FontName;
-                sheet.Cells.Style.Font.Size = excelSettings.FontSize;
-                return sheet;
+                sheet = workbook.Worksheets.Add(newSheetName);
+                break;
             }
         }
-        return workbook.Worksheets.Add(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+        sheet ??= workbook.Worksheets.Add(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+        sheet.Cells.Style.Font.Name = excelSettings.FontName;
+        sheet.Cells.Style.Font.Size = excelSettings.FontSize;
+        return sheet;
     }
 
     /// <summary>
