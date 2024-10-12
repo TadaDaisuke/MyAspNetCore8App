@@ -18,11 +18,11 @@ public class MssqlContext(string connectionString)
     public readonly int FETCH_ROW_SIZE = 50;
 
     /// <summary>
-    /// SELECT文（SqlCommand）の実行結果をDictionaryのList形式で返すとともに、カラム情報を出力する。
+    /// SELECT文（SqlCommand）の実行結果をDictionaryのList形式で返すとともに、カラムのメタデータを出力する。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
-    /// <param name="schemaTable">カラム情報出力用DataTable</param>
-    public IList<IDictionary<string, string?>> GetRowList(SqlCommand cmd, out DataTable schemaTable)
+    /// <param name="columnSchemas">カラムのメタデータのリスト（出力用）</param>
+    public IList<IDictionary<string, string?>> GetRowList(SqlCommand cmd, out IList<ColumnSchema> columnSchemas)
     {
         var list = new List<IDictionary<string, string?>>();
         using (var conn = new SqlConnection(connectionString))
@@ -31,11 +31,20 @@ public class MssqlContext(string connectionString)
             cmd.Connection = conn;
             using (var reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess | CommandBehavior.SingleResult | CommandBehavior.CloseConnection))
             {
-                schemaTable = reader.GetSchemaTable();
+                columnSchemas = reader.GetSchemaTable().AsEnumerable()
+                    .Select(row =>
+                        new ColumnSchema(
+                            row.Field<string>("ColumnName") ?? string.Empty,
+                            row.Field<string>("DataTypeName") ?? string.Empty,
+                            row.Field<short>("NumericScale")))
+                    .ToList();
                 var uniqueColNames = new List<string>();
-                foreach (var colName in schemaTable.AsEnumerable().Select(row => row.Field<string>("ColumnName")))
+                foreach (var columnSchema in columnSchemas)
                 {
-                    uniqueColNames.Add((string.IsNullOrWhiteSpace(colName) || uniqueColNames.Contains(colName)) ? Guid.NewGuid().ToString() : colName);
+                    uniqueColNames.Add(
+                        string.IsNullOrWhiteSpace(columnSchema.ColumnName) || uniqueColNames.Contains(columnSchema.ColumnName)
+                            ? Guid.NewGuid().ToString()
+                            : columnSchema.ColumnName);
                 }
                 while (reader.Read())
                 {
@@ -43,15 +52,13 @@ public class MssqlContext(string connectionString)
                     for (var index = 0; index < reader.FieldCount; index++)
                     {
                         var colValue = reader.GetValue(index);
-                        dict.Add
-                        (
+                        dict.Add(
                             uniqueColNames[index],
                             (colValue == null || colValue == DBNull.Value)
                                 ? null
                                 : colValue is DateTime dateTimeValue
                                     ? dateTimeValue.ToString(reader.GetDataTypeName(index) == "date" ? DEFAULT_DATEONLY_FORMAT : DEFAULT_DATETIME_FORMAT)
-                                    : colValue.ToString()
-                        );
+                                    : colValue.ToString());
                     }
                     list.Add(dict);
                 }
@@ -62,7 +69,7 @@ public class MssqlContext(string connectionString)
 
     /// <summary>
     /// SELECT文（SqlCommand）の実行結果をDictionaryのList形式で返す。
-    /// SELECTのみ（カラム情報不要）用途のオーバーロード。
+    /// SELECTのみ（カラムのメタデータ不要）用途のオーバーロード。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
     public IList<IDictionary<string, string?>> GetRowList(SqlCommand cmd) => GetRowList(cmd, out _);

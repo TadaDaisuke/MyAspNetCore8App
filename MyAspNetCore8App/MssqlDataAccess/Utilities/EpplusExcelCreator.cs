@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
-using System.Data;
 
 namespace MyAspNetCore8App.MssqlDataAccess.Utilities;
 
@@ -40,10 +39,10 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
         var sheet = AddWorksheet(package.Workbook, sheetName);
         // クエリの実行
         IList<IDictionary<string, string?>> rowList;
-        DataTable schemaTable;
+        IList<ColumnSchema> columnSchemas;
         try
         {
-            rowList = context.GetRowList(cmd, out schemaTable);
+            rowList = context.GetRowList(cmd, out columnSchemas);
         }
         catch (Exception ex)
         {
@@ -66,18 +65,18 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
         {
             if (currentRow > MAX_ROW + 1)
             {
-                AdjustSheet(sheet, schemaTable);
+                AdjustSheet(sheet, columnSchemas);
                 sheet = AddWorksheet(package.Workbook);
                 currentRow = 2;
             }
             if (currentRow == 2)
             {
-                for (var columnIndex = 1; columnIndex <= schemaTable.Rows.Count; columnIndex++)
+                for (var columnIndex = 1; columnIndex <= columnSchemas.Count; columnIndex++)
                 {
-                    var schemaRow = schemaTable.Rows[columnIndex - 1];
+                    var columnSchema = columnSchemas[columnIndex - 1];
                     var column = sheet.Column(columnIndex);
                     // 列毎の書式設定
-                    switch (schemaRow.Field<string>("DataTypeName"))
+                    switch (columnSchema.DataTypeName)
                     {
                         case "char":
                         case "varchar":
@@ -101,29 +100,28 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
                             break;
                         case "decimal":
                             var decimalFormat = "#,##0";
-                            var scale = schemaRow.Field<short>("NumericScale");
-                            if (scale > 0)
+                            if (columnSchema.NumericScale > 0)
                             {
-                                decimalFormat += $".{new string('0', scale)}";
+                                decimalFormat += $".{new string('0', columnSchema.NumericScale)}";
                             }
                             column.Style.Numberformat.Format = decimalFormat;
                             break;
                     }
                     // タイトル行の設定
                     sheet.Cells[1, columnIndex].Style.Numberformat.Format = "@";
-                    sheet.Cells[1, columnIndex].Value = schemaRow.Field<string>("ColumnName");
+                    sheet.Cells[1, columnIndex].Value = columnSchema.ColumnName;
                     sheet.Cells[1, columnIndex].Style.TextRotation = 180;
                 }
             }
             var currentColumn = 1;
             foreach (var v in row.Values)
             {
-                SetCellValue(sheet.Cells[currentRow, currentColumn], v, schemaTable.Rows[currentColumn - 1].Field<string>("DataTypeName"));
+                SetCellValue(sheet.Cells[currentRow, currentColumn], v, columnSchemas[currentColumn - 1].DataTypeName);
                 currentColumn++;
             }
             currentRow++;
         }
-        AdjustSheet(sheet, schemaTable);
+        AdjustSheet(sheet, columnSchemas);
     }
 
     /// <summary>
@@ -232,13 +230,13 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
     /// 入力済みシートの表示を調整する
     /// </summary>
     /// <param name="sheet">ExcelWorksheetオブジェクト</param>
-    /// <param name="schemaTable">列情報のDataTable</param>
-    private void AdjustSheet(ExcelWorksheet sheet, DataTable schemaTable)
+    /// <param name="columnSchemas">カラムのメタデータのリスト</param>
+    private void AdjustSheet(ExcelWorksheet sheet, IList<ColumnSchema> columnSchemas)
     {
         sheet.View.FreezePanes(2, 1);
-        for (var columnIndex = 1; columnIndex <= schemaTable.Rows.Count; columnIndex++)
+        for (var columnIndex = 1; columnIndex <= columnSchemas.Count; columnIndex++)
         {
-            if (schemaTable.Rows[columnIndex - 1].Field<string>("DataTypeName") == "bit")
+            if (columnSchemas[columnIndex - 1].DataTypeName == "bit")
             {
                 sheet.Column(columnIndex).Width = 0.7 * excelSettings.FontSize;
             }
