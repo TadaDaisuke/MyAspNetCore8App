@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace MyAspNetCore8App.MssqlDataAccess.Utilities;
 
@@ -75,6 +76,7 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
                 {
                     var columnSchema = columnSchemas[columnIndex - 1];
                     var column = sheet.Column(columnIndex);
+                    column.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
                     // 列毎の書式設定
                     switch (columnSchema.DataTypeName)
                     {
@@ -111,6 +113,7 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
                     sheet.Cells[1, columnIndex].Style.Numberformat.Format = "@";
                     sheet.Cells[1, columnIndex].Value = columnSchema.ColumnName;
                     sheet.Cells[1, columnIndex].Style.TextRotation = 180;
+                    sheet.Cells[1, columnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Bottom;
                 }
             }
             var currentColumn = 1;
@@ -246,6 +249,8 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
             {
                 sheet.Column(columnIndex).AutoFit(3, 120);
             }
+            sheet.Column(columnIndex).Style.WrapText = true;
+            sheet.Cells[1, columnIndex].Style.WrapText = false;
         }
     }
 }
