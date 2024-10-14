@@ -2,6 +2,7 @@
 using Serilog;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 
 namespace MyAspNetCore8App.MssqlDataAccess;
@@ -81,11 +82,7 @@ public class MssqlContext(string connectionString)
     public void ExecuteSqlCommand(SqlCommand cmd)
     {
         var callerMethod = new StackFrame(1)?.GetMethod();
-        var logMessage = new StringBuilder()
-            .AppendLine($"SQLを実行します。呼び出し元: {callerMethod?.ReflectedType?.FullName}.{callerMethod?.Name}")
-            .Append(GetCommandLogString(cmd))
-            .ToString();
-        Log.ForContext(GetType()).Information(logMessage);
+        LogCommandDetails(cmd, callerMethod);
         using (var conn = new SqlConnection(connectionString))
         {
             conn.Open();
@@ -110,11 +107,7 @@ public class MssqlContext(string connectionString)
                 {
                     foreach (var cmd in cmds)
                     {
-                        var logMessage = new StringBuilder()
-                            .AppendLine($"SQLを実行します。呼び出し元: {callerMethod?.ReflectedType?.FullName}.{callerMethod?.Name}")
-                            .Append(GetCommandLogString(cmd))
-                            .ToString();
-                        Log.ForContext(GetType()).Information(logMessage);
+                        LogCommandDetails(cmd, callerMethod);
                         cmd.Connection = conn;
                         cmd.Transaction = transaction;
                         cmd.ExecuteNonQuery();
@@ -132,12 +125,14 @@ public class MssqlContext(string connectionString)
     }
 
     /// <summary>
-    /// SqlCommandオブジェクトのログ出力用文字列（CommandText/CommandType/Parameters）を返す。
+    ///  SqlCommandの詳細をログに出力する。
     /// </summary>
     /// <param name="cmd">SqlCommandオブジェクト</param>
-    private static string GetCommandLogString(SqlCommand cmd)
+    /// <param name="callerMethod">呼び出し元のメソッド情報</param>
+    private void LogCommandDetails(SqlCommand cmd, MethodBase? callerMethod)
     {
         var sb = new StringBuilder()
+            .AppendLine($"SQLを実行します。呼び出し元: {callerMethod?.ReflectedType?.FullName}.{callerMethod?.Name}")
             .AppendLine("[CommandText]")
             .Append(cmd.CommandType == CommandType.Text ? "" : "    ")
             .AppendLine(cmd.CommandText)
@@ -145,16 +140,22 @@ public class MssqlContext(string connectionString)
             .Append($"    {cmd.CommandType}");
         if (cmd.Parameters.Count > 0)
         {
-            static string? formatValue(object? o) =>
-                (o as DateTime?)?.ToString(DEFAULT_DATETIME_FORMAT)
-                    ?? (o as DateOnly?)?.ToString(DEFAULT_DATEONLY_FORMAT)
-                        ?? o?.ToString();
-            sb.AppendLine().AppendLine("[Parameters]").Append(string.Join(
-                Environment.NewLine,
-                cmd.Parameters
-                    .OfType<SqlParameter>()
-                    .Select(p => $"    {p.ParameterName}({p.SqlDbType}): {formatValue(p.Value)}")));
+            static string? formatValue(object o) =>
+                o == DBNull.Value
+                    ? "NULL"
+                    : o switch
+                    {
+                        DateTime dt => dt.ToString(DEFAULT_DATETIME_FORMAT),
+                        DateOnly d => d.ToString(DEFAULT_DATEONLY_FORMAT),
+                        _ => o.ToString()
+                    };
+            sb.AppendLine();
+            sb.AppendLine("[Parameters]");
+            sb.Append(
+                string.Join(
+                    Environment.NewLine,
+                    cmd.Parameters.OfType<SqlParameter>().Select(p => $"    {p.ParameterName}({p.SqlDbType}): {formatValue(p.Value)}")));
         }
-        return sb.ToString();
+        Log.ForContext(GetType()).Information(sb.ToString());
     }
 }
