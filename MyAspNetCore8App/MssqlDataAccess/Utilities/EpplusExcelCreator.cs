@@ -47,18 +47,12 @@ public class EpplusExcelCreator(MssqlContext context, ExcelSettings excelSetting
         }
         catch (Exception ex)
         {
-            if (ex is OutOfMemoryException)
+            sheet.Cells[1, 1].Value = ex switch
             {
-                sheet.Cells[1, 1].Value = "メモリ不足のエラーが発生しました。";
-            }
-            else if (ex is SqlException)
-            {
-                sheet.Cells[1, 1].Value = "データベースのエラーが発生しました。";
-            }
-            else
-            {
-                sheet.Cells[1, 1].Value = "エラーが発生しました。";
-            }
+                OutOfMemoryException => "メモリ不足のエラーが発生しました。",
+                SqlException => "データベースのエラーが発生しました。",
+                _ => "エラーが発生しました。",
+            };
             return;
         }
         var currentRow = 2;
