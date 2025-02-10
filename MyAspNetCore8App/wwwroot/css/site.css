@@ -49,9 +49,7 @@ body {
 .btn-sort {
     font-size: 0.8rem;
     padding: 0.2em 0.5em;
-    border: none;
-    color: #fff;
-    background-color: var(--bs-blue);
+    border: 0;
 }
 
 .btn-to-top {
